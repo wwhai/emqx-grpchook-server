@@ -4,6 +4,9 @@ import (
 	"context"
 	"emqx-grpchook-server/grpchook"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/ngaut/log"
 	"google.golang.org/grpc"
@@ -147,7 +150,12 @@ func startServer() {
 //go:generate ./gen_proto.sh
 
 func main() {
+
+	sigs := make(chan os.Signal, 1)
+	done := make(chan bool, 1)
+
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	startServer()
-	for {
-	}
+	<-done
+	log.Debug("Exit")
 }
