@@ -1,0 +1,270 @@
+syntax = "proto3";
+
+option go_package = "./;grpchook";
+option java_multiple_files = false;
+option java_package = "grpchook";
+option java_outer_classname = "grpchook";
+
+package grpchook;
+//
+// RpcHook interface
+//
+service RpcHook {
+    // Client
+    rpc ClientConnect(ConnectRequest) returns(ConnectResponse);
+    rpc ClientConnack(ConnackRequest) returns(ConnackResponse);
+    rpc ClientConnected(ConnectedRequest) returns(ConnectedResponse);
+    rpc ClientDisconnected(DisconnectedRequest) returns(DisconnectedResponse);
+    rpc ClientAuthenticate(AuthenticateRequest) returns(AuthenticateResponse);
+    rpc ClientCheckAcl(CheckAclRequest) returns(CheckAclResponse);
+    rpc ClientSubscribe(SubscribeRequest) returns(SubscribeResponse);
+    rpc ClientUnsubscribe(UnsubscribeRequest) returns(UnsubscribeResponse);
+    // Session
+    rpc SessionCreated(SessionCreatedRequest) returns(SessionCreatedResponse);
+    rpc SessionSubscribed(SessionSubscribedRequest) returns(SessionSubscribedResponse);
+    rpc SessionUnsubscribed(SessionUnsubscribedRequest) returns(SessionUnsubscribedResponse);
+    rpc SessionTerminated(SessionTerminatedRequest) returns(SessionTerminatedResponse);
+    // Message
+    rpc MessagePublish(MessagePublishRequest) returns(MessagePublishResponse);
+    rpc MessageDelivered(MessageDeliveredRequest) returns(MessageDeliveredResponse);
+    rpc MessageAcked(MessageAckedRequest) returns(MessageAckedResponse);
+    rpc MessageDropped(MessageDroppedRequest) returns(MessageDroppedResponse);
+}
+//------------------------------------------------------------------------------
+// Request Message
+//------------------------------------------------------------------------------
+message ConnectRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string ipaddress = 5;
+    int32 keepalive = 6;
+    string proto_ver = 7;
+}
+message ConnackRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string ipaddress = 5;
+    int32 keepalive = 6;
+    string proto_ver = 7;
+    int32 conn_ack = 8;
+}
+message ConnectedRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string ipaddress = 5;
+    int32 keepalive = 6;
+    string proto_ver = 7;
+    string connected_at = 8;
+}
+message DisconnectedRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string reason = 7;
+    string disconnected_at = 8;
+}
+message AuthenticateRequest{
+    string clientId = 1;
+    string username = 2;
+    string password = 3;
+    string protocol = 4;
+    string peerhost = 5;
+    int32 sockport =  6;
+    string peercert = 7;
+    bool is_bridge = 8;
+    bool is_superuser = 9;
+    string mountpoint = 10;
+    string zone = 11;
+    string tls_common_name = 12;
+    string tls_subject = 13;
+}
+message CheckAclRequest{
+    string clientId = 1;
+    string username = 2;
+    string password = 3;
+    string protocol = 4;
+    string peerhost = 5;
+    int32 sockport =  6;
+    string peercert = 7;
+    bool is_bridge = 8;
+    bool is_superuser = 9;
+    string mountpoint = 10;
+    string zone = 11;
+    string tls_common_name = 12;
+    string tls_subject = 13;
+    string topic = 14;
+    string access = 15;
+}
+message SubscribeRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string topic = 5;
+    map<string, string> opts = 6;
+}
+message UnsubscribeRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string topic = 5;
+    map<string, string> opts = 6;
+}
+
+message SessionCreatedRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string topic = 5;
+    string created_at = 6;
+}
+
+message SessionSubscribedRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string topic = 5;
+}
+
+message SessionUnsubscribedRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string topic = 5;
+}
+
+message SessionTerminatedRequest{
+    string action = 1;
+    string node = 2;
+    string clientid = 3;
+    string username = 4;
+    string reason = 5;
+}
+
+message MessagePublishRequest{
+    string action = 1;
+    string node = 2;
+    string from_client_id = 3;
+    string from_username = 4;
+    string topic = 5;
+    int32 qos = 6;
+    bool retain = 7;
+    string payload = 8;
+    string ts = 9;
+}
+
+message MessageDeliveredRequest{
+    string action = 1;
+    string node = 2;
+    string from_client_id = 3;
+    string from_username = 4;
+    string topic = 5;
+    int32 qos = 6;
+    bool retain = 7;
+    string payload = 8;
+    string ts = 9;
+}
+
+message MessageAckedRequest{
+    string action = 1;
+    string node = 2;
+    string from_client_id = 3;
+    string from_username = 4;
+    string topic = 5;
+    int32 qos = 6;
+    bool retain = 7;
+    string payload = 8;
+    string ts = 9;
+}
+
+message MessageDroppedRequest{
+    string action = 1;
+    string node = 2;
+    string by_client_id = 3;
+    string by_username = 4;
+    string topic = 5;
+    int32 qos = 6;
+    bool retain = 7;
+    string payload = 8;
+    string ts = 10;
+}
+//------------------------------------------------------------------------------
+// Response Message
+//------------------------------------------------------------------------------
+message ConnectResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message ConnackResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message ConnectedResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message DisconnectedResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message AuthenticateResponse{
+    bool result = 1;
+    string msg = 2;
+    bool is_superuser = 3;
+}
+message CheckAclResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message SubscribeResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message UnsubscribeResponse{
+    bool result = 1;
+    string msg = 2;
+}
+
+message SessionCreatedResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message SessionSubscribedResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message SessionUnsubscribedResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message SessionTerminatedResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message MessagePublishResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message MessageDeliveredResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message MessageAckedResponse{
+    bool result = 1;
+    string msg = 2;
+}
+message MessageDroppedResponse{
+    bool result = 1;
+    string msg = 2;
+}
