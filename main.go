@@ -151,11 +151,9 @@ func startServer() {
 
 func main() {
 
-	sigs := make(chan os.Signal, 1)
-	done := make(chan bool, 1)
-
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	channel := make(chan os.Signal, 1)
+	signal.Notify(channel, syscall.SIGINT, syscall.SIGTERM)
 	startServer()
-	<-done
-	log.Debug("Exit")
+	<-channel
+	log.Debug("Exit.")
 }
